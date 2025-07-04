@@ -1,6 +1,5 @@
 services:
   app:
-    image: auth_service
     container_name: auth-app
     build:
       context: .

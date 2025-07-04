@@ -3,7 +3,7 @@ server:
 
 logger:
   level: "debug"
-  file_name: "./server.log"
+  filename: "./server.log"
 
 database:
   driver: "postgres"
@@ -12,7 +12,6 @@ database:
   user: "auth_user"
   password: "auth_password"
   dbname: "auth_db"
-  max_attempts: 10
-  timeout: 5
+  maxAttempts: 10
 
 

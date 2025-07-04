@@ -1,8 +1,6 @@
 package config
 
 import (
-	"time"
-
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
@@ -18,14 +16,13 @@ type Config struct {
 	}
 
 	Database struct {
-		Driver      string        `yaml:"driver"`
-		Host        string        `yaml:"host"`
-		Port        int           `yaml:"port"`
-		User        string        `yaml:"user"`
-		Password    string        `yaml:"password"`
-		Dbname      string        `yaml:"dbname"`
-		MaxAttempts int           `yaml:"max_attempts"`
-		Timeout     time.Duration `yaml:"timeout"`
+		Driver      string `yaml:"driver"`
+		Host        string `yaml:"host"`
+		Port        int    `yaml:"port"`
+		User        string `yaml:"user"`
+		Password    string `yaml:"password"`
+		Dbname      string `yaml:"dbname"`
+		MaxAttempts int    `yaml:"maxAttempts"`
 	}
 }
 
@@ -35,14 +32,14 @@ func NewConfig() *Config {
 	viper.AddConfigPath("./configs")
 
 	if err := viper.ReadInConfig(); err != nil {
-		logrus.Fatalf("config read error: %v", err)
+		logrus.Fatalf("ошибка чтения конфига: %v", err)
 	}
 
 	var cfg Config
 
 	err := viper.Unmarshal(&cfg)
 	if err != nil {
-		logrus.Fatalf("parsing in struct error: %v", err)
+		logrus.Fatalf("неудачный парсинг конфига в структуру: %v", err)
 	}
 
 	return &cfg

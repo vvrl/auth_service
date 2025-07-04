@@ -29,15 +29,14 @@ func NewApp(config *config.Config, logger *logrus.Logger) *AuthService {
 
 func (a *AuthService) Run() error {
 
-	// НАСТРОИТЬ ПОДКЛЮЧЕНИЕ К БАЗЕ ДАННЫХ В ЦИКЛЕ
-	if err := a.store.Open(context.Background(), a.config); err != nil {
-		a.logger.Fatal("Ошибка при подключении к базе данных: ", err)
+	if err := a.store.Open(context.Background(), a.config, a.logger); err != nil {
+		a.logger.Fatal("ошибка при подключении к базе данных: ", err)
 	}
 	defer a.store.Close()
 
 	handlers.CreateRouters(a.router)
 
-	a.logger.Info("Сервер запущен на порту: ", a.config.Server.Port)
+	a.logger.Info("сервер запущен на порту: ", a.config.Server.Port)
 
 	return http.ListenAndServe(":"+a.config.Server.Port, a.router)
 }

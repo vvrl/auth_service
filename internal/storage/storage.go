@@ -23,7 +23,7 @@ func NewStore() *Store {
 	return &Store{}
 }
 
-func (s *Store) Open(ctx context.Context, cfg *config.Config) error {
+func (s *Store) Open(ctx context.Context, cfg *config.Config, logger *logrus.Logger) error {
 	dsn := fmt.Sprintf(
 		"postgres://%s:%s@%s:%d/%s?sslmode=disable",
 		cfg.Database.User,
@@ -33,7 +33,7 @@ func (s *Store) Open(ctx context.Context, cfg *config.Config) error {
 		cfg.Database.Dbname,
 	)
 
-	delay := time.Second * 2
+	delay := time.Second
 
 	ctxTimeOut, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
@@ -45,16 +45,18 @@ func (s *Store) Open(ctx context.Context, cfg *config.Config) error {
 			if err = dbpool.Ping(ctxTimeOut); err == nil {
 				s.pool = dbpool
 				return nil
+			} else {
+				logger.Debug("ошибка пинга базы данных: ", err)
 			}
-			logrus.Debug("ошибка создания пула соединений: ", err)
+
 			dbpool.Close()
 		} else {
-			logrus.Debug("ошибка пинга базы данных: ", err)
+			logger.Debug("ошибка создания пула соединений: ", err)
 		}
 
 		select {
 		case <-time.After(delay):
-			logrus.Debugf("попытка %d из %d подключения к базе данных", i+1, cfg.Database.MaxAttempts)
+			logger.Debugf("попытка %d из %d подключения к базе данных", i+1, cfg.Database.MaxAttempts)
 		case <-ctxTimeOut.Done():
 			return errors.New("истекло время для подключения к базе данных")
 		}

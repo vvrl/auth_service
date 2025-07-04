@@ -12,14 +12,12 @@ func main() {
 	logger, err := logger.NewLogger(cfg)
 
 	if err != nil {
-		log.Fatal("Ошибка при создании логера:", err)
+		log.Fatal("ошибка при создании логера:", err)
 	}
 
 	authService := authservice.NewApp(cfg, logger)
 
-	logger.Info("Сервис создан")
-
 	if err := authService.Run(); err != nil {
-		logger.Fatal("Ошибка при запуске сервера: ", err)
+		logger.Fatal("ошибка при запуске сервера: ", err)
 	}
 }
