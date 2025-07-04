@@ -6,7 +6,7 @@ build:
 .DEFAULT_GOAL := build
 
 docker:
-	docker-compose -f docker-compose.yml up -d
+	docker-compose -f docker-compose.yml up
 
 run: 
 	docker run -d -p 8080:8080 auth_service

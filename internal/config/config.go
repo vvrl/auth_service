@@ -1,6 +1,8 @@
-package authservice
+package config
 
 import (
+	"time"
+
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
@@ -13,6 +15,17 @@ type Config struct {
 	Logger struct {
 		Level    string `yaml:"level"`
 		FileName string `yaml:"file_name"`
+	}
+
+	Database struct {
+		Driver      string        `yaml:"driver"`
+		Host        string        `yaml:"host"`
+		Port        int           `yaml:"port"`
+		User        string        `yaml:"user"`
+		Password    string        `yaml:"password"`
+		Dbname      string        `yaml:"dbname"`
+		MaxAttempts int           `yaml:"max_attempts"`
+		Timeout     time.Duration `yaml:"timeout"`
 	}
 }
 

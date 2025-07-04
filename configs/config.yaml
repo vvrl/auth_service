@@ -5,9 +5,14 @@ logger:
   level: "debug"
   file_name: "./server.log"
 
-# database:
-#   host: "localhost"
-#   port: 5432
-#   user: "auth_user"
-#   password: "auth_password"
-#   dbname: "auth_db"
+database:
+  driver: "postgres"
+  host: "auth-psql"
+  port: 5432
+  user: "auth_user"
+  password: "auth_password"
+  dbname: "auth_db"
+  max_attempts: 10
+  timeout: 5
+
+
