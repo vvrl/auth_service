@@ -15,5 +15,8 @@ FROM alpine
 
 COPY --from=builder /app/bin/authservice /
 COPY configs/config.yaml configs/config.yaml
+COPY internal/migrations internal/migrations
+COPY .env /
+
 
 CMD ["/authservice"]

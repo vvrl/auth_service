@@ -32,6 +32,7 @@ func (a *AuthService) Run() error {
 	if err := a.store.Open(context.Background(), a.config, a.logger); err != nil {
 		a.logger.Fatal("ошибка при подключении к базе данных: ", err)
 	}
+	a.logger.Info("успешное подключение к базе данных")
 	defer a.store.Close()
 
 	handlers.CreateRouters(a.router)

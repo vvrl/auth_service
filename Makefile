@@ -1,15 +1,11 @@
-.PHONY: build
-build:
-	go build -v ./cmd/authservice
-	./authservice.exe
-
-.DEFAULT_GOAL := build
-
 docker:
-	docker-compose -f docker-compose.yml up
+	docker-compose -f docker-compose.yml up -d
 
-run: 
-	docker run -d -p 8080:8080 auth_service
+.DEFAULT_GOAL := docker
 
-stop:
-	docker stop auth_service-container || echo "контейнер не запущен"
+
+stop: 
+	docker-compose stop
+
+db:
+	docker exec -it auth-psql psql auth_user -d auth_db

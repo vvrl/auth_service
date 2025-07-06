@@ -16,7 +16,7 @@ type Storage interface {
 }
 
 type Store struct {
-	pool *pgxpool.Pool
+	Pool *pgxpool.Pool
 }
 
 func NewStore() *Store {
@@ -33,6 +33,10 @@ func (s *Store) Open(ctx context.Context, cfg *config.Config, logger *logrus.Log
 		cfg.Database.Dbname,
 	)
 
+	if err := Migrate(cfg); err != nil {
+		return err
+	}
+
 	delay := time.Second
 
 	ctxTimeOut, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -43,7 +47,7 @@ func (s *Store) Open(ctx context.Context, cfg *config.Config, logger *logrus.Log
 		dbpool, err := pgxpool.New(ctxTimeOut, dsn)
 		if err == nil {
 			if err = dbpool.Ping(ctxTimeOut); err == nil {
-				s.pool = dbpool
+				s.Pool = dbpool
 				return nil
 			} else {
 				logger.Debug("ошибка пинга базы данных: ", err)
@@ -66,9 +70,9 @@ func (s *Store) Open(ctx context.Context, cfg *config.Config, logger *logrus.Log
 }
 
 func (s *Store) Close() error {
-	if s.pool == nil {
+	if s.Pool == nil {
 		return errors.New("нет пула соединений")
 	}
-	s.pool.Close()
+	s.Pool.Close()
 	return nil
 }
