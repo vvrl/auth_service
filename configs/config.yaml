@@ -13,7 +13,7 @@ database:
   user: "auth_user"
   password: "auth_password"
   dbname: "auth_db"
-  maxAttempts: 10
+  maxAttempts: 20
 
 migrations:
   migrationsDir: "/internal/migrations"

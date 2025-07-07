@@ -15,9 +15,9 @@ func main() {
 		log.Fatal("ошибка при создании логера:", err)
 	}
 
-	authService := authservice.NewApp(cfg, logger)
+	authApp := authservice.NewApp(cfg, logger)
 
-	if err := authService.Run(); err != nil {
+	if err := authApp.Run(); err != nil {
 		logger.Fatal("ошибка при запуске сервера: ", err)
 	}
 }

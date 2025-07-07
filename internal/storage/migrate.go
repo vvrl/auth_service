@@ -25,7 +25,7 @@ func Migrate(cfg *config.Config) error {
 		cfg.Database.Dbname,
 	)
 
-	const delay = 5 * time.Second
+	const delay = 3 * time.Second
 
 	db, err := sql.Open("pgx", dsn)
 	if err != nil {
@@ -33,7 +33,7 @@ func Migrate(cfg *config.Config) error {
 	}
 	defer db.Close()
 
-	ctxTimeOut, cancel := context.WithTimeout(context.Background(), 50*time.Second)
+	ctxTimeOut, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 	defer cancel()
 
 	// временное подключение к бд для миграций

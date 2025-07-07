@@ -1,21 +1,24 @@
 package authservice
 
 import (
+	"auth_service/internal/api"
+	"auth_service/internal/auth"
 	"auth_service/internal/config"
-	"auth_service/internal/handlers"
 	"auth_service/internal/storage"
 	"context"
-	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 )
 
 type AuthService struct {
-	config *config.Config
-	logger *logrus.Logger
-	router *mux.Router
-	store  *storage.Store
+	config  *config.Config
+	logger  *logrus.Logger
+	router  *mux.Router
+	store   *storage.Store
+	service *auth.AuthService
+	handler *api.Handler
 }
 
 func NewApp(config *config.Config, logger *logrus.Logger) *AuthService {
@@ -35,9 +38,15 @@ func (a *AuthService) Run() error {
 	a.logger.Info("успешное подключение к базе данных")
 	defer a.store.Close()
 
-	handlers.CreateRouters(a.router)
+	a.service = auth.NewService(a.store, a.logger)
+	a.handler = api.NewHandler(a.service, a.store, a.logger)
+
+	e := echo.New()
+	api.CreateRouters(e, a.handler)
+
+	e.Logger.Fatal(e.Start(":" + a.config.Server.Port))
 
 	a.logger.Info("сервер запущен на порту: ", a.config.Server.Port)
 
-	return http.ListenAndServe(":"+a.config.Server.Port, a.router)
+	return nil
 }
